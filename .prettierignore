@@ -1,0 +1,7 @@
+dist
+node_modules
+pnpm-lock.yaml
+
+# Exercise files are authored by hand and their tagged code fences are read by
+# the loader, so they are left exactly as written.
+src/problems

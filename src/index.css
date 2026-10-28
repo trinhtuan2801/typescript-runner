@@ -1,0 +1,530 @@
+@import 'tailwindcss';
+
+/* Shared by every theme. Only colours change below. */
+:root {
+  --font: 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b1016;
+  --panel: #111823;
+  --panel-2: #0e141d;
+  --border: #1f2a38;
+  --border-soft: #141c27;
+  --border-strong: #2c3a4d;
+  --surface-hover: #18212f;
+  --surface-accent: #1d2b3e;
+  --code-bg: #0a0f16;
+  --text: #dbe4ef;
+  --text-strong: #f2f6fb;
+  --muted: #7d8fa5;
+  --accent: #4c9aff;
+  --accent-hover: #63a9ff;
+  --accent-ink: #06121f;
+  --accent-text: #cfe0f5;
+  --border-accent: #2b3d55;
+  --ident: #9fd0ff;
+  --good: #3ddc97;
+  --bad: #ff6b6b;
+  --warn: #f5c451;
+  --violet: #c3a8ff;
+  --violet-bg: #302a3e;
+  --good-bg: #103326;
+  --bad-bg: #3a1a1f;
+  --danger-border: #40232a;
+  --notice-bg: #2a2412;
+  --notice-border: #4a3f1c;
+  --notice-text: #e8d9a8;
+  --scrollbar: #243143;
+  --img-bg: #1a2330;
+  --paused-line: rgba(245, 196, 81, 0.14);
+  --error-line: rgba(255, 107, 107, 0.12);
+  --ansi-magenta: #c3a8ff;
+  --ansi-cyan: #6fd7e0;
+  --ansi-white: #f2f6fb;
+  --ansi-black: #5a6a7d;
+  color-scheme: dark;
+}
+
+:root,
+:root[data-theme='dark-modern'] {
+  --bg: #141414;
+  --panel: #1f1f1f;
+  --panel-2: #181818;
+  --border: #2b2b2b;
+  --border-soft: #262626;
+  --border-strong: #3c3c3c;
+  --surface-hover: #2a2a2a;
+  --surface-accent: #04395e;
+  --code-bg: #181818;
+  --text: #cccccc;
+  --text-strong: #ffffff;
+  --muted: #9d9d9d;
+  --accent: #4daafc;
+  --accent-hover: #6ab7fd;
+  --accent-ink: #0b1a26;
+  --accent-text: #9cdcfe;
+  --border-accent: #2b4a66;
+  --ident: #9cdcfe;
+  --good: #23d18b;
+  --bad: #f14c4c;
+  --warn: #d7ba7d;
+  --violet: #c586c0;
+  --violet-bg: #2e2730;
+  --good-bg: #0d2a1f;
+  --bad-bg: #2f1d1d;
+  --danger-border: #46292a;
+  --notice-bg: #2e2810;
+  --notice-border: #46400f;
+  --notice-text: #d7ba7d;
+  --scrollbar: #4f4f4f;
+  --img-bg: #2a2a2a;
+  --paused-line: rgba(215, 186, 125, 0.14);
+  --error-line: rgba(241, 76, 76, 0.12);
+  --ansi-magenta: #c586c0;
+  --ansi-cyan: #29b8db;
+  --ansi-white: #e5e5e5;
+  --ansi-black: #9d9d9d;
+  color-scheme: dark;
+}
+
+:root[data-theme='one-dark'] {
+  --bg: #181a1f;
+  --panel: #282c34;
+  --panel-2: #21252b;
+  --border: #181a1f;
+  --border-soft: #323842;
+  --border-strong: #3e4451;
+  --surface-hover: #2c313a;
+  --surface-accent: #2d3643;
+  --code-bg: #21252b;
+  --text: #abb2bf;
+  --text-strong: #d7dae0;
+  --muted: #5c6370;
+  --accent: #61afef;
+  --accent-hover: #7cc0f5;
+  --accent-ink: #1b1d23;
+  --accent-text: #a9d4f7;
+  --border-accent: #3a4a5f;
+  --ident: #61afef;
+  --good: #98c379;
+  --bad: #e06c75;
+  --warn: #e5c07b;
+  --violet: #c678dd;
+  --violet-bg: #322b3b;
+  --good-bg: #2a3527;
+  --bad-bg: #3a2a2d;
+  --danger-border: #4a3034;
+  --notice-bg: #332e22;
+  --notice-border: #4d452e;
+  --notice-text: #e5c07b;
+  --scrollbar: #4b5263;
+  --img-bg: #2c313a;
+  --paused-line: rgba(229, 192, 123, 0.14);
+  --error-line: rgba(224, 108, 117, 0.12);
+  --ansi-magenta: #c678dd;
+  --ansi-cyan: #56b6c2;
+  --ansi-white: #d7dae0;
+  --ansi-black: #5c6370;
+  color-scheme: dark;
+}
+
+:root[data-theme='night-shift'] {
+  --bg: #15110b;
+  --panel: #1c1710;
+  --panel-2: #171209;
+  --border: #2e2619;
+  --border-soft: #251f14;
+  --border-strong: #403524;
+  --surface-hover: #241d13;
+  --surface-accent: #33281a;
+  --code-bg: #171208;
+  --text: #e8dcc4;
+  --text-strong: #fff6e2;
+  --muted: #9a8c73;
+  --accent: #ffb454;
+  --accent-hover: #ffc477;
+  --accent-ink: #1a1308;
+  --accent-text: #ffd9a0;
+  --border-accent: #5a4526;
+  --ident: #ffd98a;
+  --good: #b8bb26;
+  --bad: #fb4934;
+  --warn: #fabd2f;
+  --violet: #d3869b;
+  --violet-bg: #33212a;
+  --good-bg: #2a2d14;
+  --bad-bg: #331c18;
+  --danger-border: #4a2b22;
+  --notice-bg: #332715;
+  --notice-border: #4d3c1d;
+  --notice-text: #fabd2f;
+  --scrollbar: #4a3e29;
+  --img-bg: #241d13;
+  --paused-line: rgba(250, 189, 47, 0.16);
+  --error-line: rgba(251, 73, 52, 0.12);
+  --ansi-magenta: #d3869b;
+  --ansi-cyan: #8ec07c;
+  --ansi-white: #fff6e2;
+  --ansi-black: #9a8c73;
+  color-scheme: dark;
+}
+
+:root[data-theme='night-shift-light'] {
+  --bg: #e6d9bb;
+  --panel: #fdf6e3;
+  --panel-2: #f5ecd7;
+  --border: #ddd0b0;
+  --border-soft: #efe5cc;
+  --border-strong: #c8b995;
+  --surface-hover: #f2e8d2;
+  --surface-accent: #f7e9c6;
+  --code-bg: #f4ead3;
+  --text: #4a4034;
+  --text-strong: #2d2519;
+  --muted: #8a7c66;
+  --accent: #b5730f;
+  --accent-hover: #9c6309;
+  --accent-ink: #fff8e8;
+  --accent-text: #8a5a0c;
+  --border-accent: #d9b97a;
+  --ident: #8a5a0c;
+  --good: #5a7a16;
+  --bad: #b3261e;
+  --warn: #946200;
+  --violet: #8a4b6b;
+  --violet-bg: #f2e0e8;
+  --good-bg: #e6edd0;
+  --bad-bg: #f6dedc;
+  --danger-border: #e0bdb8;
+  --notice-bg: #fbeec8;
+  --notice-border: #e3cf94;
+  --notice-text: #6b5618;
+  --scrollbar: #c8b995;
+  --img-bg: #ece2cb;
+  --paused-line: rgba(181, 115, 15, 0.16);
+  --error-line: rgba(179, 38, 30, 0.1);
+  --ansi-magenta: #8a4b6b;
+  --ansi-cyan: #2a7a72;
+  --ansi-white: #2d2519;
+  --ansi-black: #8a7c66;
+  color-scheme: light;
+}
+
+:root[data-theme='light'] {
+  --bg: #e9edf2;
+  --panel: #ffffff;
+  --panel-2: #f5f7fa;
+  --border: #d7dee7;
+  --border-soft: #edf1f5;
+  --border-strong: #bcc7d4;
+  --surface-hover: #eef2f7;
+  --surface-accent: #e3eefd;
+  --code-bg: #f3f5f8;
+  --text: #1f2733;
+  --text-strong: #0c131d;
+  --muted: #64748b;
+  --accent: #0b66d0;
+  --accent-hover: #0a5bbb;
+  --accent-ink: #ffffff;
+  --accent-text: #0b4a96;
+  --border-accent: #b7d2f3;
+  --ident: #0b5fa8;
+  --good: #13794a;
+  --bad: #c0343a;
+  --warn: #96670a;
+  --violet: #6d44c8;
+  --violet-bg: #efe8ff;
+  --good-bg: #dcf3e7;
+  --bad-bg: #fbe3e4;
+  --danger-border: #e8c6c8;
+  --notice-bg: #fdf4d8;
+  --notice-border: #e6cf8c;
+  --notice-text: #6b5618;
+  --scrollbar: #c3ccd8;
+  --img-bg: #e9edf2;
+  --paused-line: rgba(224, 168, 20, 0.18);
+  --error-line: rgba(192, 52, 58, 0.1);
+  --ansi-magenta: #6d44c8;
+  --ansi-cyan: #0d7c8a;
+  --ansi-white: #0c131d;
+  --ansi-black: #8795a8;
+  color-scheme: light;
+}
+
+/* The palettes above stay the single source of truth for colour. These entries
+   hand the same values to Tailwind, so `bg-panel` or `text-muted` follow
+   whichever theme is active. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-border-strong: var(--border-strong);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-accent: var(--surface-accent);
+  --color-code-bg: var(--code-bg);
+  --color-text: var(--text);
+  --color-text-strong: var(--text-strong);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+  --color-border-accent: var(--border-accent);
+  --color-ident: var(--ident);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
+  --color-warn: var(--warn);
+  --color-violet: var(--violet);
+  --color-violet-bg: var(--violet-bg);
+  --color-good-bg: var(--good-bg);
+  --color-bad-bg: var(--bad-bg);
+  --color-danger-border: var(--danger-border);
+  --color-notice-bg: var(--notice-bg);
+  --color-notice-border: var(--notice-border);
+  --color-notice-text: var(--notice-text);
+  --color-scrollbar: var(--scrollbar);
+  --color-img-bg: var(--img-bg);
+  --color-ansi-magenta: var(--ansi-magenta);
+  --color-ansi-cyan: var(--ansi-cyan);
+  --color-ansi-white: var(--ansi-white);
+  --color-ansi-black: var(--ansi-black);
+  --font-sans: var(--font);
+  --font-mono: var(--mono);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* Classes Monaco puts on its own elements, so they cannot be utilities. */
+@layer components {
+  .bp-glyph {
+    background: var(--bad);
+    border-radius: 50%;
+    width: 10px !important;
+    height: 10px !important;
+    margin-left: 6px;
+    margin-top: 5px;
+  }
+
+  .bp-glyph-hover {
+    background: var(--bad);
+    opacity: 0.33;
+    border-radius: 50%;
+    width: 10px !important;
+    height: 10px !important;
+    margin-left: 6px;
+    margin-top: 5px;
+  }
+
+  .paused-glyph {
+    background: var(--warn);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    width: 10px !important;
+    height: 12px !important;
+    margin-left: 6px;
+    margin-top: 4px;
+  }
+
+  .paused-line {
+    background: var(--paused-line);
+    border-left: 2px solid var(--warn);
+  }
+
+  .error-line {
+    background: var(--error-line);
+  }
+
+  .monaco-editor .glyph-margin,
+  .monaco-editor .margin-view-overlays .bp-glyph,
+  .monaco-editor .margin-view-overlays .bp-glyph-hover {
+    cursor: pointer;
+  }
+
+  /* The dotted handle that shows a row can be dragged. */
+  .grip {
+    display: inline-block;
+    width: 8px;
+    height: 11px;
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
+    background-size: 4px 4px;
+    background-position: 0 1px;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    vertical-align: middle;
+  }
+
+  .draggable-row:hover .grip {
+    opacity: 0.8;
+  }
+}
+
+/* Pasted descriptions arrive as markup we do not control, so their typography
+   is set here rather than with utilities. */
+@layer components {
+  .notes:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+  }
+
+  .notes.rich > *:first-child {
+    margin-top: 0;
+  }
+  .notes.rich p,
+  .notes.rich div {
+    margin: 0 0 8px;
+  }
+  .notes.rich h1,
+  .notes.rich h2,
+  .notes.rich h3,
+  .notes.rich h4,
+  .notes.rich h5,
+  .notes.rich h6 {
+    margin: 16px 0 8px;
+    line-height: 1.3;
+    color: var(--text-strong);
+    font-weight: 600;
+  }
+  .notes.rich h1 {
+    font-size: 18px;
+  }
+  .notes.rich h2 {
+    font-size: 16px;
+  }
+  .notes.rich h3,
+  .notes.rich h4,
+  .notes.rich h5,
+  .notes.rich h6 {
+    font-size: 14px;
+  }
+  .notes.rich strong,
+  .notes.rich b {
+    color: var(--text-strong);
+    font-weight: 600;
+  }
+  .notes.rich em,
+  .notes.rich i {
+    font-style: italic;
+  }
+  .notes.rich ul,
+  .notes.rich ol {
+    margin: 8px 0;
+    padding-left: 22px;
+  }
+  .notes.rich ul {
+    list-style: disc;
+  }
+  .notes.rich ol {
+    list-style: decimal;
+  }
+  .notes.rich li {
+    margin: 3px 0;
+  }
+  .notes.rich a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .notes.rich code,
+  .notes.rich kbd,
+  .notes.rich samp,
+  .notes.rich var {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-style: normal;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+  }
+  .notes.rich pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 8px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .notes.rich pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    white-space: inherit;
+  }
+  .notes.rich blockquote {
+    margin: 8px 0;
+    padding-left: 12px;
+    border-left: 2px solid var(--border);
+    color: var(--muted);
+  }
+  .notes.rich table {
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 12.5px;
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .notes.rich th,
+  .notes.rich td {
+    border: 1px solid var(--border);
+    padding: 5px 9px;
+    text-align: left;
+  }
+  .notes.rich th {
+    background: var(--panel-2);
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .notes.rich img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin: 8px 0;
+    background: var(--img-bg);
+  }
+  .notes.rich hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14px 0;
+  }
+  .notes.rich figure {
+    margin: 8px 0;
+  }
+  .notes.rich figcaption {
+    color: var(--muted);
+    font-size: 12px;
+  }
+}

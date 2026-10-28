@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript Runner</title>
+    <script>
+      // Set the theme before the first paint so the page never flashes the
+      // wrong one while the app loads. Kept in step with src/lib/theme.ts.
+      try {
+        var known = ['light', 'dark', 'one-dark', 'dark-modern', 'night-shift', 'night-shift-light']
+        var stored = JSON.parse(localStorage.getItem('leetcode-practice:theme'))
+        var dark = matchMedia('(prefers-color-scheme: dark)').matches
+        var resolved = stored === 'system' ? (dark ? 'dark-modern' : 'light') : stored
+        document.documentElement.dataset.theme =
+          known.indexOf(resolved) === -1 ? 'dark-modern' : resolved
+      } catch (err) {
+        document.documentElement.dataset.theme = 'dark-modern'
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
