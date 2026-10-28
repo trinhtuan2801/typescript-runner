@@ -31,7 +31,8 @@ const sectionToggle =
 
 const rowBase = 'draggable-row cursor-grab border-b border-border-soft'
 
-const softLabel = 'font-normal tracking-normal normal-case text-muted'
+// The reorder hint is pointer only, so it stays out of the way on small screens.
+const softLabel = 'hidden font-normal tracking-normal normal-case text-muted md:inline'
 
 const dropShadow = {
   above: 'shadow-[inset_0_2px_0_-1px_var(--accent)]',

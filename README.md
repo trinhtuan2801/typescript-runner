@@ -92,6 +92,21 @@ the top as you step. Reset order puts them back the way the debugger reported th
 Your code, notes, breakpoints, watch list, panel sizes, collapsed sections and variable
 order are all saved in the browser, so closing the tab loses nothing.
 
+## On a phone
+
+Below 768 pixels the panes cannot sit side by side, so one is shown at a time and the
+toolbar becomes a tab bar: tap Problem, Code, Console or Debugger to switch. Everything
+works from there, including running, breakpoints and stepping. The editor uses a larger
+font and a narrower gutter, and the buttons grow to a comfortable size for a thumb.
+
+Dragging a watch or a variable into a different order needs a pointer, so that handle
+is not offered on a touch screen; the lists still collapse and everything else behaves
+the same.
+
+Between those two extremes the columns shrink rather than running off the edge, and the
+editor keeps a floor of 240 pixels. If it still feels tight, hide a pane or two from the
+toolbar.
+
 ## Keyboard shortcuts
 
 | Shortcut                        | Action                                  |

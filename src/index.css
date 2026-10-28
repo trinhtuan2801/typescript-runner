@@ -303,6 +303,20 @@
     height: 100%;
   }
 
+  /* Mobile browsers change the viewport as their chrome slides away, so the
+     dynamic unit keeps the panes filling the screen. */
+  @supports (height: 100dvh) {
+    html,
+    body,
+    #root {
+      height: 100dvh;
+    }
+  }
+
+  body {
+    overscroll-behavior: none;
+  }
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -386,6 +400,17 @@
 
   .draggable-row:hover .grip {
     opacity: 0.8;
+  }
+
+  /* Dragging a row needs a pointer. On touch the handle would be a dead end,
+     so it is not offered. */
+  @media (hover: none) {
+    .grip {
+      display: none;
+    }
+    .draggable-row {
+      cursor: default;
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import { FormatIcon, PlayIcon } from './components/icons'
 import { Splitter } from './components/Splitter'
 import { ghostButton, iconButton, pane, paneHead, paneTitle, select } from './components/ui'
 import { canIsolate, type LogEntry, type PausedState, type WorkerOut } from './lib/protocol'
+import { useIsNarrow } from './lib/responsive'
 import { Runner } from './lib/runner'
 import { sanitizeHtml } from './lib/sanitize'
 import { load, save } from './lib/storage'
@@ -96,13 +97,19 @@ export default function App() {
   })
   const resolvedTheme = useResolvedTheme(theme)
 
-  const [leftWidth, setLeftWidth] = useState(() => load('leftWidth', 340))
-  const [rightWidth, setRightWidth] = useState(() => load('rightWidth', 340))
-  const [consoleWidth, setConsoleWidth] = useState(() => load('consoleWidth', 380))
+  const [leftWidth, setLeftWidth] = useState(() => load('leftWidth', 300))
+  const [rightWidth, setRightWidth] = useState(() => load('rightWidth', 320))
+  const [consoleWidth, setConsoleWidth] = useState(() => load('consoleWidth', 320))
   const [visible, setVisible] = useState<Record<SectionKey, boolean>>(() => ({
     ...ALL_VISIBLE,
     ...load<Partial<Record<SectionKey, boolean>>>('visible', {}),
   }))
+  // On a narrow screen the panes cannot sit side by side, so one is shown at a
+  // time and the same toolbar picks which.
+  const narrow = useIsNarrow()
+  const [activeSection, setActiveSection] = useState<SectionKey>(() =>
+    load<SectionKey>('activeSection', 'code'),
+  )
 
   useEffect(() => {
     save('theme', theme)
@@ -137,6 +144,9 @@ export default function App() {
   useEffect(() => {
     save('visible', visible)
   }, [visible])
+  useEffect(() => {
+    save('activeSection', activeSection)
+  }, [activeSection])
   useEffect(() => () => runner.current?.terminate(), [])
 
   const appendLog = useCallback((level: LogEntry['level'], text: string) => {
@@ -356,8 +366,12 @@ export default function App() {
     debug: (delta) => setRightWidth((value) => clamp(value + delta, 240, 640)),
   }
 
+  // The fixed panes may shrink when the window is too small to hold them all,
+  // but the flexible one keeps a floor so the editor never squeezes to nothing.
   const template = shown
-    .map((section) => (section.key === flexKey ? '1fr' : `${fixedWidth[section.key]}px`))
+    .map((section) =>
+      section.key === flexKey ? 'minmax(240px, 1fr)' : `minmax(0, ${fixedWidth[section.key]}px)`,
+    )
     .join(' 6px ')
 
   // A splitter moves whichever neighbour has a fixed width.
@@ -426,6 +440,7 @@ export default function App() {
           onFormatError={reportFormatError}
           onBreakpointsMoved={setBreakpoints}
           autoFormat={status === 'idle'}
+          narrow={narrow}
         />
       </section>
     ),
@@ -465,14 +480,20 @@ export default function App() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex flex-none items-center gap-1 border-b border-border bg-panel-2 px-2.5 py-[5px]">
+      <header className="flex flex-none flex-wrap items-center gap-1 border-b border-border bg-panel-2 px-2.5 py-[5px]">
         {SECTIONS.map((section) => (
           <button
             key={section.key}
-            className={visible[section.key] ? chipOn : chipOff}
-            onClick={() => toggleSection(section.key)}
-            aria-pressed={visible[section.key]}
-            title={`${visible[section.key] ? 'Hide' : 'Show'} the ${section.label} section`}
+            className={
+              (narrow ? activeSection === section.key : visible[section.key]) ? chipOn : chipOff
+            }
+            onClick={() => (narrow ? setActiveSection(section.key) : toggleSection(section.key))}
+            aria-pressed={narrow ? activeSection === section.key : visible[section.key]}
+            title={
+              narrow
+                ? `Show ${section.label}`
+                : `${visible[section.key] ? 'Hide' : 'Show'} the ${section.label} section`
+            }
           >
             {section.label}
           </button>
@@ -492,14 +513,22 @@ export default function App() {
         </select>
       </header>
 
-      <main className="grid min-h-0 flex-1 bg-bg" style={{ gridTemplateColumns: template }}>
-        {shown.map((section, index) => (
-          <Fragment key={section.key}>
-            {index > 0 && <Splitter orientation="vertical" onResize={splitterResize(index - 1)} />}
-            {nodes[section.key]}
-          </Fragment>
-        ))}
-      </main>
+      {narrow ? (
+        // A single cell grid, so the pane stretches to fill it exactly as the
+        // columns do on a wider screen.
+        <main className="grid min-h-0 flex-1 bg-bg">{nodes[activeSection]}</main>
+      ) : (
+        <main className="grid min-h-0 flex-1 bg-bg" style={{ gridTemplateColumns: template }}>
+          {shown.map((section, index) => (
+            <Fragment key={section.key}>
+              {index > 0 && (
+                <Splitter orientation="vertical" onResize={splitterResize(index - 1)} />
+              )}
+              {nodes[section.key]}
+            </Fragment>
+          ))}
+        </main>
+      )}
     </div>
   )
 }

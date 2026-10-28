@@ -5,8 +5,9 @@
 
 export const pane = 'flex min-h-0 min-w-0 flex-col border border-border bg-panel'
 
+/** Wraps rather than overflowing when a pane is squeezed narrow. */
 export const paneHead =
-  'flex min-h-10 flex-none items-center justify-between gap-2.5 border-b border-border bg-panel-2 px-3 py-2'
+  'flex min-h-10 flex-none flex-wrap items-center justify-between gap-2.5 border-b border-border bg-panel-2 px-3 py-2'
 
 export const paneTitle = 'text-[13px] font-semibold'
 
@@ -25,8 +26,8 @@ export const secondaryButton = `${button} border-border-accent bg-surface-accent
 
 export const dangerButton = `${button} border-danger-border bg-transparent px-3 py-1.5 text-bad enabled:hover:bg-surface-hover`
 
-/** A square button that carries an icon instead of a label. */
-export const iconButton = 'flex h-[26px] w-7 items-center justify-center !px-0 !py-0'
+/** A square button that carries an icon instead of a label. Roomier on touch. */
+export const iconButton = 'flex h-8 w-9 items-center justify-center !px-0 !py-0 md:h-[26px] md:w-7'
 
 export const linkButton =
   'cursor-pointer border-none bg-transparent pl-2 text-[12px] font-normal normal-case tracking-normal text-accent'

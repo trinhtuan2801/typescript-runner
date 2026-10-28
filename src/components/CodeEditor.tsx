@@ -23,6 +23,8 @@ interface Props {
   onFormatError: (message: string) => void
   /** Format when focus leaves the editor. Off while a run is in flight. */
   autoFormat: boolean
+  /** Roomier text and a narrower gutter for a phone sized screen. */
+  narrow: boolean
   /** Called after a reformat so breakpoints follow the lines they marked. */
   onBreakpointsMoved: (lines: number[]) => void
   ref?: Ref<EditorHandle>
@@ -54,8 +56,8 @@ export function CodeEditor(props: Props) {
       model,
       theme: handlers.current.theme,
       automaticLayout: true,
-      fontSize: 13,
-      lineHeight: 20,
+      fontSize: handlers.current.narrow ? 14 : 13,
+      lineHeight: handlers.current.narrow ? 22 : 20,
       fontFamily: "'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace",
       glyphMargin: true,
       minimap: { enabled: false },
@@ -221,6 +223,17 @@ export function CodeEditor(props: Props) {
   useEffect(() => {
     monaco.editor.setTheme(props.theme)
   }, [props.theme])
+
+  useEffect(() => {
+    editorRef.current?.updateOptions({
+      fontSize: props.narrow ? 14 : 13,
+      lineHeight: props.narrow ? 22 : 20,
+      lineNumbersMinChars: props.narrow ? 3 : 5,
+      folding: !props.narrow,
+      // A phone has no room for the overview ruler beside the scrollbar.
+      overviewRulerLanes: props.narrow ? 0 : 3,
+    })
+  }, [props.narrow])
 
   // Breakpoint dots, the paused line and the line that threw.
   useEffect(() => {
