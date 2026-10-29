@@ -64,7 +64,7 @@ export function NotesPane({ html, onChange }: Props) {
         onPaste={handlePaste}
         onInput={handleInput}
         onBlur={handleInput}
-        data-placeholder="Paste the problem description here. Formatting, tables and images are kept."
+        data-placeholder="Paste the problem description here."
       />
     </section>
   )

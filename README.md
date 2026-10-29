@@ -107,6 +107,14 @@ Between those two extremes the columns shrink rather than running off the edge, 
 editor keeps a floor of 240 pixels. If it still feels tight, hide a pane or two from the
 toolbar.
 
+## Layout
+
+It opens with Problem, Code and Console across the screen, a quarter for the description,
+half for the editor and a quarter for the output. The Debugger starts closed; bring it
+in from the toolbar whenever you need it, and the editor gives up the space. Drag any
+handle to trade width between the two panes it sits between, and hide anything you are
+not using. Your arrangement is remembered.
+
 ## Keyboard shortcuts
 
 | Shortcut                        | Action                                  |

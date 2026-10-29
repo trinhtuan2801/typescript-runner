@@ -33,14 +33,31 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: 'debug', label: 'Debugger' },
 ]
 
-const ALL_VISIBLE: Record<SectionKey, boolean> = {
+/** The debugger starts closed, leaving Problem, Code and Console on screen. */
+const DEFAULT_VISIBLE: Record<SectionKey, boolean> = {
   notes: true,
   code: true,
   console: true,
-  debug: true,
+  debug: false,
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+/** Panes have a floor so they stay usable, but no ceiling. */
+const MIN_PANE = 300
+const MIN_CODE = 600
+
+const SPLITTER = 6
+
+/**
+ * A quarter of the room left by the two splitters in the opening layout, so
+ * Problem and Console each take a quarter of the window and the editor between
+ * them takes the other half. Only used when nothing has been saved yet.
+ */
+function defaultPaneWidth(): number {
+  const available = (typeof window === 'undefined' ? 1440 : window.innerWidth) - 2 * SPLITTER
+  return Math.max(MIN_PANE, Math.round(available / 4))
+}
 
 const chipBase =
   'cursor-pointer rounded-full border px-2.5 py-[3px] text-[12px] transition-colors disabled:cursor-not-allowed'
@@ -77,6 +94,7 @@ export default function App() {
   if (runner.current === null) runner.current = new Runner()
 
   const editorHandle = useRef<EditorHandle | null>(null)
+  const mainRef = useRef<HTMLElement | null>(null)
   const logId = useRef(0)
 
   const [code, setCode] = useState<string>(() => load('code', STARTER))
@@ -100,11 +118,17 @@ export default function App() {
   })
   const resolvedTheme = useResolvedTheme(theme)
 
-  const [leftWidth, setLeftWidth] = useState(() => load('leftWidth', 300))
-  const [rightWidth, setRightWidth] = useState(() => load('rightWidth', 320))
-  const [consoleWidth, setConsoleWidth] = useState(() => load('consoleWidth', 320))
+  const [widths, setWidths] = useState<Record<SectionKey, number>>(() => {
+    const quarter = defaultPaneWidth()
+    return {
+      notes: load('leftWidth', quarter),
+      code: 0,
+      console: load('consoleWidth', quarter),
+      debug: load('rightWidth', quarter),
+    }
+  })
   const [visible, setVisible] = useState<Record<SectionKey, boolean>>(() => ({
-    ...ALL_VISIBLE,
+    ...DEFAULT_VISIBLE,
     ...load<Partial<Record<SectionKey, boolean>>>('visible', {}),
   }))
   // On a narrow screen the panes cannot sit side by side, so one is shown at a
@@ -136,14 +160,10 @@ export default function App() {
     save('varOrder', varOrder)
   }, [varOrder])
   useEffect(() => {
-    save('leftWidth', leftWidth)
-  }, [leftWidth])
-  useEffect(() => {
-    save('rightWidth', rightWidth)
-  }, [rightWidth])
-  useEffect(() => {
-    save('consoleWidth', consoleWidth)
-  }, [consoleWidth])
+    save('leftWidth', widths.notes)
+    save('consoleWidth', widths.console)
+    save('rightWidth', widths.debug)
+  }, [widths])
   useEffect(() => {
     save('visible', visible)
   }, [visible])
@@ -355,34 +375,59 @@ export default function App() {
       ? 'code'
       : shown[shown.length - 1].key
 
-  const fixedWidth: Record<SectionKey, number> = {
-    notes: leftWidth,
-    code: 0,
-    console: consoleWidth,
-    debug: rightWidth,
-  }
-
-  const resizers: Record<SectionKey, (delta: number) => void> = {
-    notes: (delta) => setLeftWidth((value) => clamp(value + delta, 220, 720)),
-    code: () => {},
-    console: (delta) => setConsoleWidth((value) => clamp(value + delta, 220, 720)),
-    debug: (delta) => setRightWidth((value) => clamp(value + delta, 240, 640)),
-  }
-
   // The fixed panes may shrink when the window is too small to hold them all,
   // but the flexible one keeps a floor so the editor never squeezes to nothing.
   const template = shown
     .map((section) =>
-      section.key === flexKey ? 'minmax(240px, 1fr)' : `minmax(0, ${fixedWidth[section.key]}px)`,
+      section.key === flexKey
+        ? `minmax(${MIN_CODE}px, 1fr)`
+        : `minmax(0, ${widths[section.key]}px)`,
     )
-    .join(' 6px ')
+    .join(` ${SPLITTER}px `)
 
-  // A splitter moves whichever neighbour has a fixed width.
+  /**
+   * A handle resizes the two panes it sits between and nothing else.
+   *
+   * Both widths move by the same amount in one update, so they never drift
+   * apart when one of them runs out of room. There is no upper limit: a pane
+   * grows for as long as its partner has width left to give.
+   */
   const splitterResize = (leftIndex: number) => (delta: number) => {
     const left = shown[leftIndex]
     const right = shown[leftIndex + 1]
-    if (left.key !== flexKey) resizers[left.key](delta)
-    else if (right) resizers[right.key](-delta)
+    if (!right || delta === 0) return
+    const leftIsCode = left.key === flexKey
+    const rightIsCode = right.key === flexKey
+
+    setWidths((current) => {
+      if (!leftIsCode && !rightIsCode) {
+        // Neither is the editor, so they trade and the row's total is unchanged.
+        const giver = delta > 0 ? right.key : left.key
+        const room = Math.max(0, current[giver] - MIN_PANE)
+        const applied = Math.sign(delta) * Math.min(Math.abs(delta), room)
+        if (applied === 0) return current
+        return {
+          ...current,
+          [left.key]: current[left.key] + applied,
+          [right.key]: current[right.key] - applied,
+        }
+      }
+
+      // The editor is one of the two. It has no width of its own, so only the
+      // other pane is stored, and it may grow until the editor reaches its floor.
+      const key = leftIsCode ? right.key : left.key
+      const towards = leftIsCode ? -delta : delta
+      const others = shown.reduce(
+        (sum, section) =>
+          section.key === flexKey || section.key === key ? sum : sum + current[section.key],
+        0,
+      )
+      const container = mainRef.current?.clientWidth ?? 0
+      const headroom = container - (shown.length - 1) * SPLITTER - others - MIN_CODE
+      const limit = Math.max(MIN_PANE, headroom)
+      const next = clamp(current[key] + towards, MIN_PANE, limit)
+      return next === current[key] ? current : { ...current, [key]: next }
+    })
   }
 
   const toggleSection = (key: SectionKey) => {
@@ -521,7 +566,11 @@ export default function App() {
         // columns do on a wider screen.
         <main className="grid min-h-0 flex-1 bg-bg">{nodes[activeSection]}</main>
       ) : (
-        <main className="grid min-h-0 flex-1 bg-bg" style={{ gridTemplateColumns: template }}>
+        <main
+          ref={mainRef}
+          className="grid min-h-0 flex-1 bg-bg"
+          style={{ gridTemplateColumns: template }}
+        >
           {shown.map((section, index) => (
             <Fragment key={section.key}>
               {index > 0 && (
