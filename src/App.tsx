@@ -55,7 +55,7 @@ const statusTone: Record<Status, string> = {
   paused: 'text-accent',
 }
 
-const STARTER = `// Paste a solution here, call it, and log the result.
+const STARTER = `// Paste a solution here, then check it below.
 function twoSum(nums: number[], target: number): number[] {
   const seen = new Map<number, number>()
   for (let i = 0; i < nums.length; i++) {
@@ -66,7 +66,10 @@ function twoSum(nums: number[], target: number): number[] {
   return []
 }
 
-console.log(twoSum([2, 7, 11, 15], 9))
+// Tests
+check(() => twoSum([2, 7, 11, 15], 9), [0, 1])
+check(() => twoSum([3, 2, 4], 6), [1, 2])
+check(() => twoSum([3, 3], 6), [0, 1])
 `
 
 export default function App() {
